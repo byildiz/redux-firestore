@@ -35,10 +35,12 @@ function newArrayWithItemMoved(collectionState, meta, newValue) {
     ...collectionState.slice(oldIndex + 1),
   ];
   // Insert item in new array while preserving order of other items
+  const oldValue = collectionState[oldIndex];
+  console.log('meta', meta);
   return [
     ...arrayWithoutItem.slice(0, newIndex),
     // set new item (falling back to using a copy of the removed item)
-    newValue || { ...collectionState[oldIndex] },
+    newValue ? { ...newValue, id: oldValue.id } : { ...oldValue, ...newValue },
     ...arrayWithoutItem.slice(newIndex),
   ];
 }
@@ -52,6 +54,7 @@ function newArrayWithItemMoved(collectionState, meta, newValue) {
  * @return {Array} State with document modified
  */
 function modifyDoc(collectionState, action) {
+  console.log('mod');
   // Support moving a doc within an array
   if (action.payload.ordered) {
     const { newIndex, oldIndex } = action.payload.ordered;
